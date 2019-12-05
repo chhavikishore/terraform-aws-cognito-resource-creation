@@ -1,0 +1,1 @@
+Terraform script to create AWS cognito User Pool, Identity Poal and attch Policies for it.
