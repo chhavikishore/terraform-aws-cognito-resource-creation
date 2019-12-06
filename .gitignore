@@ -1,0 +1,3 @@
+/AwsProvider/.terraform
+get-docker.sh
+/AwsProvider/terraform.tfstate.backup

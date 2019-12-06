@@ -1,21 +1,22 @@
 # change IdentityPool name accordingly to development environment everywhere 
 # put your own access key and secret key
+# put provider_name in aws_cognito_identity_pool 
 
 
-# AWS provider
+# AWS provider   
 
 provider "aws" {
   region     = "ap-south-1"
-  access_key = "my-access-key"
-  secret_key = "my-secret-key"
+  access_key = "root"
+  secret_key = "root"
 }
 
 
 
 # AWS cognito user pool
 
-resource "aws_cognito_user_pool" "sba-userPool" {
-  name = "sba-userPool"
+resource "aws_cognito_user_pool" "sba-userPool-test" {
+  name = "sba-userPool-test"
   mfa_configuration = "OFF"
   password_policy {
       minimum_length    = 6
@@ -33,7 +34,7 @@ resource "aws_cognito_user_pool" "sba-userPool" {
 resource "aws_cognito_user_pool_client" "sba-user-pool-client" {
   name = "sba-user-pool-client"
 
-  user_pool_id        = "${aws_cognito_user_pool.sba-userPool.id}"
+  user_pool_id        = "${aws_cognito_user_pool.sba-userPool-test.id}"
   generate_secret     = false
 }
 
@@ -45,10 +46,9 @@ resource "aws_cognito_identity_pool" "IdentityPool" {
   identity_pool_name               = "IdentityPool"
   allow_unauthenticated_identities = false
 
-  cognito_identity_providers {
-    client_id               = "${aws_cognito_user_pool_client.sba-user-pool-client.id}"
-    provider_name           = "cognito-idp.us-east-1.amazonaws.com/us-east-1_Tv0493apJ"
-  }
+  # cognito_identity_providers {
+  #   client_id               = "${aws_cognito_user_pool_client.sba-user-pool-client.id}"
+  # }
 }
 
 
@@ -108,13 +108,7 @@ resource "aws_iam_role_policy" "authenticated" {
       "Action": [
         "mobileanalytics:PutEvents",
         "cognito-sync:*",
-        "cognito-identity:*"
-      ],
-      "Resource": [
-        "*"
-      ],
-      "Effect": "Allow",
-      "Action": [
+        "cognito-identity:*",
         "s3:*"
       ],
       "Resource": [
